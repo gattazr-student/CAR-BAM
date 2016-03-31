@@ -9,9 +9,10 @@ import java.util.List;
  * @author morat
  */
 public interface _Server {
+
 	/**
 	 * Ajoute le service caractérisé par les arguments
-	 * 
+	 *
 	 * @param name
 	 *            nom du service
 	 * @param classeName
@@ -25,7 +26,7 @@ public interface _Server {
 
 	/**
 	 * déploie l'agent caractérisé par les arguments sur le serveur
-	 * 
+	 *
 	 * @param classeName
 	 *            classe de l'agent
 	 * @param args
@@ -42,7 +43,7 @@ public interface _Server {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

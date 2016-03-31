@@ -1,5 +1,9 @@
 package jus.aor.mobilagent.hello;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jus.aor.mobilagent.kernel.Agent;
 import jus.aor.mobilagent.kernel._Action;
 
 /**
@@ -10,13 +14,24 @@ import jus.aor.mobilagent.kernel._Action;
 public class Hello extends Agent {
 
 	/**
+	 * Serial version UID
+	 */
+	private static final long serialVersionUID = 3882387847447156013L;
+
+	/**
 	 * l'action à entreprendre sur les serveurs visités
 	 */
 	protected _Action doIt = new _Action() {
+		/**
+		 * Serial version UID
+		 */
+		private static final long serialVersionUID = -9129644307555501553L;
 
 		@Override
 		public void execute() {
-			// TODO: A COMPLETER
+			// TODO: Check how to get logger from Starter
+			System.out.println("Hello Executing");
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Hello Executing");
 		}
 	};
 
@@ -27,18 +42,18 @@ public class Hello extends Agent {
 	 *            aucun argument n'est requis
 	 */
 	public Hello(Object... args) {
-		// TODO: A COMPLETER
+		System.err.println("EXITING");
+		System.exit(0);
+		// On ne fait rien à la construction de l'Agent
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see jus.aor.mobilagent.kernel.Agent#retour()
+	 * @see jus.aor.mobilagent.kernel.Agent#retour() TODO: Check why it there
+	 * was @Override
 	 */
-	@Override
 	protected _Action retour() {
-		// TODO: A COMPLETER
-		return null;
+		return this.doIt;
 	}
-	// ...
 }

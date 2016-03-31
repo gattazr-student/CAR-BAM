@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RMISecurityManager;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,9 +69,12 @@ public class Starter {
 	 * @param args
 	 */
 	public static void main(String... args) {
-		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new RMISecurityManager());
-		}
+		// Nous retirons le SecurityManager pour le moment puisque nous
+		// utilisions System.getProperties plus tard
+		// if (System.getSecurityManager() == null) {
+		// System.setSecurityManager(new SecurityManager());
+		// }
+
 		new Starter(args);
 	}
 
@@ -81,12 +83,11 @@ public class Starter {
 	/** le logger pour ce code */
 	protected Logger logger;
 	/** le server associé à ce starter */
-	protected jus.aor.mobilagent.kernel._Server server;
-
+	protected _Server server;
 	/** le Loader utilisé */
 	protected BAMServerClassLoader loader;
-	/** la classe du server : jus.aor.mobilagent.kernel.Server */
-	protected Class<jus.aor.mobilagent.kernel.Server> classe;
+	/** la classe du server : Server */
+	protected Class<Server> classe;
 
 	/**
 	 *
@@ -94,13 +95,13 @@ public class Starter {
 	 */
 	public Starter(String... args) {
 		// récupération du niveau de log
-		java.util.logging.Level level;
+		Level level;
 		try {
 			level = Level.parse(System.getProperty("LEVEL"));
 		} catch (NullPointerException e) {
-			level = java.util.logging.Level.OFF;
+			level = Level.OFF;
 		} catch (IllegalArgumentException e) {
-			level = java.util.logging.Level.SEVERE;
+			level = Level.SEVERE;
 		}
 		try {
 			/* Mise en place du logger pour tracer l'application */
@@ -110,10 +111,14 @@ public class Starter {
 			this.logger.addHandler(new IOHandler());
 			this.logger.setLevel(level);
 			/* Récupération d'informations de configuration */
+			System.out.println("About to docbuild");
+			this.logger.log(Level.FINE, "LOGGING");
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			this.doc = docBuilder.parse(new File(args[0]));
+			System.out.println("docbuilded");
 			int port = Integer.parseInt(
 					this.doc.getElementsByTagName("port").item(0).getAttributes().getNamedItem("value").getNodeValue());
+			System.out.println("port -> " + port);
 			// Création du serveur
 			this.createServer(port, args[1]);
 			// ajout des services
