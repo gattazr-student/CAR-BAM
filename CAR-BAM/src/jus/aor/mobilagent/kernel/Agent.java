@@ -2,10 +2,9 @@ package jus.aor.mobilagent.kernel;
 
 public class Agent implements _Agent, _Service<_Agent> {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -1463619481727183159L;
+
+	protected Route route;
 
 	public Agent() {
 		// TODO create constructor
@@ -13,8 +12,7 @@ public class Agent implements _Agent, _Service<_Agent> {
 
 	@Override
 	public void addEtape(Etape etape) {
-		// TODO Auto-generated method stub
-
+		this.route.add(etape);
 	}
 
 	@Override
