@@ -1,4 +1,4 @@
-package jus.aor.rmi;
+package jus.aor.rmi.common;
 
 /**
  * J<i>ava</i> U<i>tilities</i> for S<i>tudents</i>

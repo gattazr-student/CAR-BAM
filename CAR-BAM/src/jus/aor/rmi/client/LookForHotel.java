@@ -1,4 +1,4 @@
-package jus.aor.rmi;
+package jus.aor.rmi.client;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -6,6 +6,11 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import jus.aor.rmi.common.Hotel;
+import jus.aor.rmi.common.Numero;
+import jus.aor.rmi.common._Annuaire;
+import jus.aor.rmi.common._Chaine;
 
 /**
  * J<i>ava</i> U<i>tilities</i> for S<i>tudents</i>
@@ -18,14 +23,25 @@ import java.util.List;
  * @author Morat
  */
 public class LookForHotel {
+	public static void main(String[] args) {
+		if (args.length != 1) {
+			System.out.println("Arguments expected : localisation");
+			System.exit(1);
+		}
+		LookForHotel look = new LookForHotel(args[0]);
+
+		long duration = look.call();
+		System.out.println("Request proceding time: " + duration + " ms");
+	}
+
 	/** le critère de localisaton choisi */
 	private String localisation;
-
 	private int port = 1099;
 	private int nbChaines = 4;
 	private _Annuaire annuaire;
 	private List<_Chaine> chainList = new ArrayList<_Chaine>();
 	private List<Hotel> hotelList = new ArrayList<Hotel>();
+
 	private HashMap<String, Numero> numList = new HashMap<String, Numero>();
 
 	/**
@@ -87,5 +103,5 @@ public class LookForHotel {
 
 		return (time - System.nanoTime());
 	}
-	// ...
+
 }
