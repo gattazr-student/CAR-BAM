@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RMISecurityManager;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +27,18 @@ import org.w3c.dom.NodeList;
  * @author Morat
  */
 public class Starter {
+
+	/** le logger pour ce code */
+	protected static Logger logger;
+
+	/**
+	 * Retrieve the Logger
+	 *
+	 * @return Logger
+	 */
+	public static Logger getLogger() {
+		return logger;
+	}
 
 	private static Iterable<Node> iterable(final Node racine, final String element) {
 		return new Iterable<Node>() {
@@ -70,23 +81,22 @@ public class Starter {
 	 * @param args
 	 */
 	public static void main(String... args) {
-		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new RMISecurityManager());
-		}
+		// if (System.getSecurityManager() == null) {
+		// System.setSecurityManager(new RMISecurityManager());
+		// }
 		new Starter(args);
 	}
 
 	/** le document xml en cours */
 	protected Document doc;
-	/** le logger pour ce code */
-	protected Logger logger;
-	/** le server associé à ce starter */
-	protected jus.aor.mobilagent.kernel._Server server;
 
+	/** le server associé à ce starter */
+	protected _Server server;
 	/** le Loader utilisé */
 	protected BAMServerClassLoader loader;
+
 	/** la classe du server : jus.aor.mobilagent.kernel.Server */
-	protected Class<jus.aor.mobilagent.kernel.Server> classe;
+	protected Class<Server> classe;
 
 	/**
 	 *
@@ -105,10 +115,10 @@ public class Starter {
 		try {
 			/* Mise en place du logger pour tracer l'application */
 			String loggerName = "jus/aor/mobilagent/" + InetAddress.getLocalHost().getHostName() + "/" + args[1];
-			this.logger = Logger.getLogger(loggerName);
+			logger = Logger.getLogger(loggerName);
 			// logger.setUseParentHandlers(false);
-			this.logger.addHandler(new IOHandler());
-			this.logger.setLevel(level);
+			logger.addHandler(new IOHandler());
+			logger.setLevel(level);
 			/* Récupération d'informations de configuration */
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			this.doc = docBuilder.parse(new File(args[0]));
@@ -121,7 +131,7 @@ public class Starter {
 			// déploiement d'agents
 			this.deployAgents();
 		} catch (Exception ex) {
-			this.logger.log(Level.FINE, "Ce programme nécessite un argument : <conf file> <name server>", ex);
+			logger.log(Level.FINE, "Ce programme nécessite un argument : <conf file> <name server>", ex);
 			return;
 		}
 	}
@@ -142,7 +152,7 @@ public class Starter {
 		try {
 			this.server.addService(name, classeName, codeBase, args);
 		} catch (Exception e) {
-			this.logger.log(Level.FINE, " erreur durant l'ajout d'un service", e);
+			logger.log(Level.FINE, " erreur durant l'ajout d'un service", e);
 		}
 	}
 
@@ -167,11 +177,11 @@ public class Starter {
 	protected void createServer(int port, String name)
 			throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		this.loader = new BAMServerClassLoader(new URL[] { new URL("file:///.../MobilagentServer.jar") },
+		this.loader = new BAMServerClassLoader(new URL[] { new URL("file://codebase/mobilagentServer.jar") },
 				this.getClass().getClassLoader());
-		this.classe = (Class<jus.aor.mobilagent.kernel.Server>) Class.forName("jus.aor.mobilagent.kernel.Server", true,
-				this.loader);
+		this.classe = (Class<Server>) Class.forName("jus.aor.mobilagent.kernel.Server", true, this.loader);
 		this.server = this.classe.getConstructor(int.class, String.class).newInstance(port, name);
+		logger.log(Level.FINE, "Successfull creation of Server");
 	}
 
 	/**
@@ -193,7 +203,7 @@ public class Starter {
 		try {
 			this.server.deployAgent(classeName, args, codeBase, serverAddress, serverAction);
 		} catch (Exception e) {
-			this.logger.log(Level.FINE, " erreur durant le déploiement de l'agent", e);
+			logger.log(Level.FINE, " erreur durant le déploiement de l'agent", e);
 		}
 	}
 
@@ -206,7 +216,6 @@ public class Starter {
 		String codeBase;
 		String classeName;
 		List<String> serverAddress = new LinkedList<String>(), serverAction = new LinkedList<String>();
-
 		for (Node item1 : iterable(this.doc, "agent")) {
 			attrsAgent = item1.getAttributes();
 			codeBase = attrsAgent.getNamedItem("codebase").getNodeValue();
@@ -217,6 +226,7 @@ public class Starter {
 				serverAction.add(attrsEtape.getNamedItem("action").getNodeValue());
 				serverAddress.add(attrsEtape.getNamedItem("server").getNodeValue());
 			}
+
 			this.deployAgent(classeName, args, codeBase, serverAddress, serverAction);
 		}
 	}

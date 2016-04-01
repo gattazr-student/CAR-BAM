@@ -53,11 +53,24 @@ class Route implements Iterable<Etape>, Serializable {
 	/**
 	 * Restitue la prochaine étape ou la dernière qui est la base de départ.
 	 *
+	 * Si la route à un élément suivant, retourne le prochaine élement. Si elle
+	 * est finie, c'est l'adresse retour qui est retournée. Sinon, l'exception
+	 * NoSuchElementException est levée
+	 *
 	 * @return la prochaine étape.
+	 *
+	 * @throws NoSuchElementException
 	 */
-	Etape get() throws NoSuchElementException {
-		// TODO: A COMPLETER
-		return null;
+	public Etape get() throws NoSuchElementException {
+		if (this.hasNext) {
+			if (this.route.size() > 0) {
+				return this.route.get(0);
+			} else {
+				return this.retour;
+			}
+		} else {
+			throw new NoSuchElementException();
+		}
 	}
 
 	/**
@@ -85,9 +98,21 @@ class Route implements Iterable<Etape>, Serializable {
 	 *
 	 * @return la prochaine étape.
 	 */
-	Etape next() throws NoSuchElementException {
-		// TODO: A COMPLETER
-		return null;
+	public Etape next() throws NoSuchElementException {
+		Etape wStep;
+		if (this.hasNext) {
+			if (this.route.size() > 0) {
+				wStep = this.route.get(0);
+				this.route.remove(0);
+			} else {
+				wStep = this.retour;
+				this.hasNext = false;
+			}
+		} else {
+			throw new NoSuchElementException();
+		}
+
+		return wStep;
 	}
 
 	/*
