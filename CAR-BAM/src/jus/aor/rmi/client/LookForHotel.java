@@ -53,11 +53,17 @@ public class LookForHotel {
 	 */
 	public LookForHotel(String local) {
 		this.localisation = local;
+
+		// Sécurity manager : charge certaines classes dynamiquement
+		if (System.getSecurityManager() == null) {
+			System.setSecurityManager(new SecurityManager());
+		}
+
 		Registry reg;
 
 		// On récup d'abord toutes les chaines
 		try {
-			for (int i = 0; i < this.nbChaines; i++) {
+			for (int i = 1; i <= this.nbChaines; i++) {
 				reg = LocateRegistry.getRegistry(this.port + i);
 				this.chainList.add((_Chaine) reg.lookup("chain" + i));
 			}
@@ -82,26 +88,32 @@ public class LookForHotel {
 	 * @throws RemoteException
 	 */
 	public long call() {
-		long time = System.nanoTime();
+		long time = System.currentTimeMillis();
+		List<Hotel> tmpList = new ArrayList<Hotel>();
 
 		try {
 			// interrogation successive des différents serveurs de chaines
 			// d’hôtels pour obtenir l’ensemble des hôtels se trouvant dans la
 			// localisation demandée
 			for (int i = 0; i < this.chainList.size(); i++) {
-				this.hotelList.add((Hotel) this.chainList.get(i).get(
-						this.localisation));
+				tmpList = this.chainList.get(i).get(this.localisation);
+				this.hotelList.addAll(tmpList);
 			}
+			System.out.println("Le système à trouver " + this.hotelList.size()
+					+ " hôtels à " + this.localisation);
 
 			for (Hotel hotel : this.hotelList) {
 				this.numList.put(hotel.name, this.annuaire.get(hotel.name));
 			}
 
+			System.out.println("Le système à trouver " + this.numList.size()
+					+ " numéros de tel d'hôtels à " + this.localisation);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return (time - System.nanoTime());
+		return (System.currentTimeMillis() - time);
 	}
 
 }

@@ -1,5 +1,7 @@
 package jus.aor.rmi.common;
 
+import java.io.Serializable;
+
 /**
  * J<i>ava</i> U<i>tilities</i> for S<i>tudents</i>
  */
@@ -9,7 +11,7 @@ package jus.aor.rmi.common;
  *
  * @author Morat
  */
-public class Hotel {
+public class Hotel implements Serializable {
 	/** la localisation de l'hôtel */
 	public String localisation;
 	/** le nom de l'hôtel */
@@ -17,7 +19,7 @@ public class Hotel {
 
 	/**
 	 * Définition d'un hôtel par son nom et sa localisation.
-	 * 
+	 *
 	 * @param name
 	 *            le nom de l'hôtel
 	 * @param localisation

@@ -23,8 +23,7 @@ public class Annuaire extends UnicastRemoteObject implements _Annuaire {
 	private static final long serialVersionUID = -8828635014943186320L;
 	private HashMap<String, Numero> annuaire = new HashMap<String, Numero>();
 
-	protected Annuaire(String pathFile) throws RemoteException, IOException,
-			SAXException {
+	protected Annuaire(String pathFile) throws RemoteException {
 		// Init
 		DocumentBuilder documentBuilder = null;
 		Document document = null;

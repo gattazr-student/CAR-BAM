@@ -2,6 +2,7 @@ package jus.aor.rmi.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,7 @@ import org.xml.sax.SAXException;
 public class Chaine extends UnicastRemoteObject implements _Chaine {
 	private List<Hotel> hotelList = new ArrayList<Hotel>();
 
-	protected Chaine(String pathFile) throws ParserConfigurationException,
-	SAXException, IOException {
+	protected Chaine(String pathFile) throws RemoteException {
 		/*
 		 * récupération des hôtels de la chaîne dans le fichier xml passé en 1er
 		 * argument
@@ -55,7 +55,6 @@ public class Chaine extends UnicastRemoteObject implements _Chaine {
 
 	@Override
 	public List<Hotel> get(String localisation) {
-		// TODO Auto-generated method stub
 		List<Hotel> res = new ArrayList<Hotel>();
 
 		for (Hotel hotel : this.hotelList) {

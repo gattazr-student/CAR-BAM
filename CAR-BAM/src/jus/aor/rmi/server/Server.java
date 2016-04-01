@@ -20,31 +20,28 @@ public class Server {
 		}
 
 		// Sécurity manager : charge certaines classes dynamiquement
-		// if (System.getSecurityManager() == null) {
-		// System.setSecurityManager(new SecurityManager());
-		// }
+		if (System.getSecurityManager() == null) {
+			System.setSecurityManager(new SecurityManager());
+		}
 
 		try {
-
 			// Déclaration du registry
 			Registry reg;
 
 			// Enregistrement des chaines dans le registry
-			for (int i = 0; i < nbChaines; i++) {
+			for (int i = 1; i <= nbChaines; i++) {
 				reg = LocateRegistry.createRegistry(port + i);
 				// Bind de chaine dans registry
-				// TODO Changer chemin
-				Chaine c = new Chaine("src/jus/aor/rmi/DataStore/Hotels"
-						+ (i + 1) + ".xml");
+				Chaine c = new Chaine("src/jus/aor/rmi/DataStore/Hotels" + i
+						+ ".xml");
 				reg.bind("chain" + i, c);
 				System.out.println("Chemin " + i + " bind avec succès.");
 			}
 
 			// Enregistrement des entrées de l'annuaire
 			reg = LocateRegistry.createRegistry(port + nbChaines + 1);
-			// TODO Changer chemin annuaire
 			Annuaire a = new Annuaire("src/jus/aor/rmi/DataStore/Annuaire.xml");
-			reg.bind("Annuaire", a);
+			reg.bind("annuaire", a);
 			System.out.println("Annuaire créé avec succès.");
 
 		} catch (Exception e) {
