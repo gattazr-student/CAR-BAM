@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
@@ -33,7 +32,7 @@ public final class Server implements _Server {
 	/** le server d'agent démarré sur ce noeud */
 	protected AgentServer agentServer;
 	/** le nom du logger */
-	protected String loggerName;
+	// protected String loggerName;
 	/** le logger de ce serveur */
 	protected Logger logger = null;
 
@@ -50,11 +49,12 @@ public final class Server implements _Server {
 		try {
 			this.port = port;
 			/* mise en place du logger pour tracer l'application */
-			this.loggerName = "jus/aor/mobilagent/" + InetAddress.getLocalHost().getHostName() + "/" + this.name;
-			this.logger = Logger.getLogger(this.loggerName);
+			// this.loggerName = "jus/aor/mobilagent/" +
+			// InetAddress.getLocalHost().getHostName() + "/" + this.name;
+			this.logger = Starter.getLogger();
 			/* démarrage du server d'agents mobiles attaché à cette machine */
 			this.agentServer = new AgentServer(this.port, this.name);
-			this.logger.log(Level.INFO, String.format("%s: Starting AgentServer", this));
+			this.logger.log(Level.INFO, String.format("Starting AgentServer %s", this));
 			new Thread(this.agentServer).start();
 			/* temporisation de mise en place du ServerAgents */
 			Thread.sleep(1000);
@@ -62,7 +62,7 @@ public final class Server implements _Server {
 			this.logger.log(Level.FINE, " erreur durant le lancement du serveur" + this, ex);
 			return;
 		}
-		this.logger.log(Level.FINE, String.format("%s: End of creation of Server", this));
+		this.logger.log(Level.FINE, String.format("End of creation of Server %s", this));
 	}
 
 	/**
@@ -97,8 +97,7 @@ public final class Server implements _Server {
 			this.agentServer.addService(name, wService);
 
 		} catch (Exception ex) {
-			System.out.println("WOW");
-			this.logger.log(Level.FINE, " erreur pendant l'ajout des services" + this, ex);
+			this.logger.log(Level.FINE, " Erreur pendant l'ajout des services" + this, ex);
 			return;
 		}
 	}
@@ -132,13 +131,11 @@ public final class Server implements _Server {
 			Constructor<?> wConstructor = wClassAgent.getConstructor(Object[].class);
 			// Instantie l'object
 			// TODO: Fix problem here
-			Object wLol = wConstructor.newInstance(new Object[] { args });
-			wAgent = (_Agent) wLol;
+			wAgent = (_Agent) wConstructor.newInstance(new Object[] { args });
 			// Initialise l'Agent
 			wAgent.init(this.agentServer, this.name);
 			if (etapeAction.size() != etapeAction.size()) {
-				this.logger.log(Level.INFO,
-						" ERREUR : Problème de cohérence, le nombre d'action de d'adresse sont différents");
+				this.logger.log(Level.INFO, " Problème de cohérence, le nombre d'action de d'adresse sont différents");
 			} else {
 				int wSize = etapeAction.size();
 				for (int i = 0; i < wSize; i++) {
@@ -155,13 +152,12 @@ public final class Server implements _Server {
 				}
 				// Démarre l'Agent
 				this.startAgent(wAgent, wClassLoader);
-				new Thread(wAgent).start();
+				// new Thread(wAgent).start();
 			}
 
 		} catch (Exception ex) {
-			this.logger.log(Level.FINE,
-					String.format("%s: erreur durant le déploiement de l'agent %s. %s", this, wAgent, ex.getMessage()),
-					ex);
+			this.logger.log(Level.FINE, String.format("Erreur du Server %s durant le déploiement de l'agent %s. %s",
+					this, wAgent, ex.getMessage()), ex);
 			return;
 		}
 	}
@@ -185,17 +181,15 @@ public final class Server implements _Server {
 		// Creation of a Stream and a ObjectOutputStream to destination
 		OutputStream wOutputStream = wSock.getOutputStream();
 		ObjectOutputStream wObjectOutputStream = new ObjectOutputStream(wOutputStream);
-		// TODO: Find out why wObjectOutputStream2 is needed
 		ObjectOutputStream wObjectOutputStream2 = new ObjectOutputStream(wOutputStream);
 
 		// Retrieve byte code to send
-		BAMAgentClassLoader wAgentClassLoader = (BAMAgentClassLoader) this.getClass().getClassLoader();
-		Jar wBaseCode = wAgentClassLoader.extractCode();
+		Jar wBaseCode = loader.extractCode();
 
 		// Send Jar in BAMAgentClassLoader
 		wObjectOutputStream.writeObject(wBaseCode);
 		// Send Agent (this)
-		wObjectOutputStream2.writeObject(this);
+		wObjectOutputStream2.writeObject(agent);
 
 		// Close the sockets
 		wObjectOutputStream2.close();

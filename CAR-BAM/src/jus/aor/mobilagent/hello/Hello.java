@@ -1,9 +1,9 @@
 package jus.aor.mobilagent.hello;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jus.aor.mobilagent.kernel.Agent;
+import jus.aor.mobilagent.kernel.Starter;
 import jus.aor.mobilagent.kernel._Action;
 
 /**
@@ -23,7 +23,12 @@ public class Hello extends Agent {
 
 		@Override
 		public void execute() {
-			Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Action Hello");
+			Starter.getLogger().log(Level.INFO, "Executing action Hello");
+		}
+
+		@Override
+		public String toString() {
+			return new String("HELLO");
 		}
 	};
 
@@ -43,7 +48,12 @@ public class Hello extends Agent {
 
 			@Override
 			public void execute() {
-				Logger.getLogger(this.getClass().getName()).log(Level.INFO, "I'm back");
+				Starter.getLogger().log(Level.INFO, "Executing action Retour");
+			}
+
+			@Override
+			public String toString() {
+				return new String("BACK");
 			}
 		};
 	}

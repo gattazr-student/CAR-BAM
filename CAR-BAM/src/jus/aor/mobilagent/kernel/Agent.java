@@ -28,18 +28,17 @@ public class Agent implements _Agent {
 
 		// The first Etape to do by an Agent is NIHL
 		this.pRoute.add(new Etape(this.pAgentServer.site(), _Action.NIHIL));
-
-		Starter.getLogger().log(Level.INFO, String.format("%s initializd", this));
+		// Starter.getLogger().log(Level.INFO, String.format("Agent initialized
+		// %s", this));
 	}
 
 	private void move() {
 		this.move(this.pRoute.get().server);
-
 	}
 
 	protected void move(URI destination) {
 		Starter.getLogger().log(Level.FINE,
-				String.format("%s: is moving to %s:%d ", this, destination.getHost(), destination.getPort()));
+				String.format("Agent %s moving to %s:%d ", this, destination.getHost(), destination.getPort()));
 
 		try {
 			// Creation of a socket to destination
@@ -78,12 +77,12 @@ public class Agent implements _Agent {
 
 	@Override
 	public void run() {
-		Starter.getLogger().log(Level.INFO, String.format("%s: is starting execution", this));
+		Starter.getLogger().log(Level.INFO, String.format("Agent %s starting execution", this));
 
 		// If there is something to do
 		if (this.pRoute.hasNext()) {
 			Etape wNextStep = this.pRoute.next();
-			Starter.getLogger().log(Level.FINE, String.format("%s: is running step", this));
+			Starter.getLogger().log(Level.FINE, String.format("Agent %s running step %s", this, wNextStep));
 			wNextStep.action.execute();
 
 			if (this.pRoute.hasNext()) {
@@ -91,18 +90,18 @@ public class Agent implements _Agent {
 				this.move();
 			} else {
 				// There is nothing left to do, Agent has finished
-				Starter.getLogger().log(Level.FINE, String.format("%s: has finished its route", this));
+				Starter.getLogger().log(Level.FINE, String.format("Agent %s has finished its route", this));
 			}
 		} else {
 			// If this is reached, it means that the Agent had nothing to do. So
 			// just log it ended
-			Starter.getLogger().log(Level.FINE, String.format("%s: has finished its route", this));
+			Starter.getLogger().log(Level.INFO, String.format("Agent %s had already finished", this));
 		}
 	}
 
 	@Override
 	public String toString() {
-		return String.format("[Agent: route=%s, serverName=%s]", this.pRoute, this.pServerName);
+		return String.format("[Agent: route=%s, retour=%s, location=%s]", this.pRoute, this.pRoute, this.pServerName);
 	}
 
 }

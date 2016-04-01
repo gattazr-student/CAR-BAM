@@ -59,7 +59,7 @@ public class BAMAgentClassLoader extends ClassLoader {
 	 * @throws IOException
 	 */
 	public Jar extractCode() throws JarException, IOException {
-		File wTmpJar = File.createTempFile("bamrepository", ".jar");
+		File wTmpJar = File.createTempFile("temporaryJar", ".jar");
 
 		// Try to create an OutputStream and JarOutputStream on the temporary
 		// Jar file just created

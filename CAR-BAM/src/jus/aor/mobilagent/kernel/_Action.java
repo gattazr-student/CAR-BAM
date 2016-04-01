@@ -22,9 +22,13 @@ public interface _Action extends Serializable {
 
 		@Override
 		public void execute() {
-			Starter.getLogger().log(Level.INFO, "Action NIHIL");
+			Starter.getLogger().log(Level.INFO, "Executing action NIHIL");
 		}
 
+		@Override
+		public String toString() {
+			return new String("NIHIL");
+		}
 	};
 
 	/**

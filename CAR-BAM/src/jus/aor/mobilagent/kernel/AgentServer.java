@@ -54,19 +54,20 @@ public class AgentServer implements Runnable {
 	 * @throws ClassNotFoundException
 	 */
 	private _Agent getAgent(Socket aSocket) throws IOException, ClassNotFoundException {
-		// Creation of an InputStream ObjectInputStream to retrieve Jar
+		// Creation of BAMClassLoader
+		BAMAgentClassLoader wClassLoader = new BAMAgentClassLoader(this.getClass().getClassLoader());
+
+		// Creation of an InputStream, an ObjectInputStream and an
+		// AgentInputStream
 		InputStream wInputStream = aSocket.getInputStream();
 		ObjectInputStream wObjectInputStream = new ObjectInputStream(wInputStream);
-
-		// Retrieve the Jar and create a BAMAgentClassLoader integrating the Jar
-		Jar wJar = (Jar) wObjectInputStream.readObject();
-		BAMAgentClassLoader wClassLoader = new BAMAgentClassLoader(this.getClass().getClassLoader());
-		wClassLoader.integrateCode(wJar);
-
-		// Retrieve the _Agent using an AgentInputStream and the
-		// BAMAgentClassLoader
 		AgentInputStream wAgentInputStream = new AgentInputStream(wInputStream, wClassLoader);
 
+		// Retrieve the Jar and integrate it
+		Jar wJar = (Jar) wObjectInputStream.readObject();
+		wClassLoader.integrateCode(wJar);
+
+		// Retrieve the _Agent using the AgentInputStream
 		_Agent wAgent = (_Agent) wAgentInputStream.readObject();
 
 		wAgentInputStream.close();
@@ -93,16 +94,18 @@ public class AgentServer implements Runnable {
 			// Try to create a socket Server
 			ServerSocket wSocketServer = new ServerSocket(this.pPort);
 
-			Starter.getLogger().log(Level.INFO, String.format("%s: started", this));
+			Starter.getLogger().log(Level.INFO, String.format("AgentServer %s started", this));
 			while (alive) {
-				Starter.getLogger().log(Level.INFO, String.format("%s: about to accept", this));
+				Starter.getLogger().log(Level.FINE, String.format("AgentServer %s: about to accept", this));
 				// Accept on incoming Agents
 				Socket wSocketClient = wSocketServer.accept();
-				Starter.getLogger().log(Level.INFO, String.format("%s: accepted incoming agent", this));
+				Starter.getLogger().log(Level.FINE, String.format("AgentServer %s accepted an agent", this));
 
 				// load the repository and the agent
 				_Agent wAgent = this.getAgent(wSocketClient);
 				wAgent.reInit(this, this.pName);
+
+				Starter.getLogger().log(Level.INFO, String.format("AgentServer %s received agent %s", this, wAgent));
 
 				new Thread(wAgent).start();
 
@@ -110,9 +113,9 @@ public class AgentServer implements Runnable {
 			}
 			wSocketServer.close();
 		} catch (IOException aException) {
-			Starter.getLogger().log(Level.INFO, String.format("%s: An IO exception occured", this), aException);
+			Starter.getLogger().log(Level.INFO, String.format("An IO exception occured in %s", this), aException);
 		} catch (ClassNotFoundException aException) {
-			Starter.getLogger().log(Level.INFO, String.format("%s: A class was not found", this), aException);
+			Starter.getLogger().log(Level.INFO, String.format("A class was not found in %s", this), aException);
 		}
 	}
 

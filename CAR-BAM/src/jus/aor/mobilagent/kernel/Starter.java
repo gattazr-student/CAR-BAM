@@ -181,7 +181,7 @@ public class Starter {
 				this.getClass().getClassLoader());
 		this.classe = (Class<Server>) Class.forName("jus.aor.mobilagent.kernel.Server", true, this.loader);
 		this.server = this.classe.getConstructor(int.class, String.class).newInstance(port, name);
-		logger.log(Level.FINE, "Successfull creation of Server");
+		logger.log(Level.FINE, String.format("Succès de la création du server %s", this.server));
 	}
 
 	/**
