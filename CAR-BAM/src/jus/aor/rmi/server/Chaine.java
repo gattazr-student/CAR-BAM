@@ -22,7 +22,7 @@ public class Chaine extends UnicastRemoteObject implements _Chaine {
 	private List<Hotel> hotelList = new ArrayList<Hotel>();
 
 	protected Chaine(String pathFile) throws ParserConfigurationException,
-			SAXException, IOException {
+	SAXException, IOException {
 		/*
 		 * récupération des hôtels de la chaîne dans le fichier xml passé en 1er
 		 * argument
@@ -30,7 +30,7 @@ public class Chaine extends UnicastRemoteObject implements _Chaine {
 		DocumentBuilder docBuilder = null;
 		Document doc = null;
 		String name, localisation;
-		NodeList list = doc.getElementsByTagName("Hotel");
+		NodeList hlist = null;
 		NamedNodeMap attrs;
 		try {
 			docBuilder = DocumentBuilderFactory.newInstance()
@@ -41,9 +41,11 @@ public class Chaine extends UnicastRemoteObject implements _Chaine {
 			e.printStackTrace();
 		}
 
+		hlist = doc.getElementsByTagName("Hotel");
+
 		/* acquisition de toutes les entrées de la base d'hôtels */
-		for (int i = 0; i < list.getLength(); i++) {
-			attrs = list.item(i).getAttributes();
+		for (int i = 0; i < hlist.getLength(); i++) {
+			attrs = hlist.item(i).getAttributes();
 			name = attrs.getNamedItem("name").getNodeValue();
 			localisation = attrs.getNamedItem("localisation").getNodeValue();
 			this.hotelList.add(new Hotel(name, localisation));
