@@ -24,7 +24,8 @@ public class Annuaire extends UnicastRemoteObject implements _Annuaire {
 	private HashMap<String, Numero> annuaire = new HashMap<String, Numero>();
 
 	protected Annuaire(String pathFile) throws RemoteException, IOException,
-			SAXException {
+	SAXException {
+		// Init
 		DocumentBuilder documentBuilder = null;
 		Document document = null;
 		String name = "";
