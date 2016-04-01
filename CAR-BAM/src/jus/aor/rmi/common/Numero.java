@@ -6,8 +6,6 @@ package jus.aor.rmi.common;
 
 /**
  * Un numéro de téléphone
- * 
- * @author Morat
  */
 public class Numero {
 	/** le numéro de téléphone */

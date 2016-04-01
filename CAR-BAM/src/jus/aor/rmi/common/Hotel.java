@@ -6,7 +6,7 @@ package jus.aor.rmi.common;
 
 /**
  * Un hotel qui est caractérisé par son nom et sa localisation.
- * 
+ *
  * @author Morat
  */
 public class Hotel {
