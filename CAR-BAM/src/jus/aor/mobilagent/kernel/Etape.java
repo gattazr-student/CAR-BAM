@@ -8,7 +8,7 @@ import java.net.URI;
 
 /**
  * Définit une étape de la feuille de route du parcours d'un agent.
- * 
+ *
  * @author Morat
  */
 public class Etape implements Serializable {
@@ -20,7 +20,7 @@ public class Etape implements Serializable {
 
 	/**
 	 * Création d'une étape à partir d'une adresse de serveur et d'une action.
-	 * 
+	 *
 	 * @param server
 	 *            le serveur de l'étape
 	 * @param action
@@ -33,11 +33,11 @@ public class Etape implements Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return this.server + "(" + this.action + ")";
+		return String.format("[Etape: server=%s, action=%s]", this.server, this.action);
 	}
 }
