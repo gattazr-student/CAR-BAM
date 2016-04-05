@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="CAR-BAM/codebase/hello.jar"/>
+    <jar path="CAR-BAM/codebase/lookforhotel.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/CAR-BAM/jarDesc/helloJar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -11,6 +11,6 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=CAR-BAM/src&lt;jus.aor.mobilagent.hello"/>
+        <javaElement handleIdentifier="=CAR-BAM/src&lt;jus.aor.mobilagent.lookforhotel{LookForHotel.java"/>
     </selectedElements>
 </jardesc>

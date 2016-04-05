@@ -83,7 +83,7 @@ public class AgentServer implements Runnable {
 	 * @param s
 	 *            name of the service
 	 */
-	protected _Service<?> getService(String s) {
+	public _Service<?> getService(String s) {
 		return this.pServices.get(s);
 	}
 
